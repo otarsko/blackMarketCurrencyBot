@@ -1,10 +1,9 @@
-import TelegramBot from 'node-telegram-bot-api';
-import Message from './message';
-import config from '../config';
-import InputParser from './inputParser';
-import handlers from '../handlers';
+import TelegramBot from "node-telegram-bot-api";
+import Message from "./message";
+import config from "../config"
+import HandlerRouter from "../handlers";
 
-const inputParser = new InputParser();
+const handlerRouter = new HandlerRouter();
 
 export default class Messenger {
 
@@ -15,7 +14,6 @@ export default class Messenger {
     } else {
       this.bot = new TelegramBot(config.telegram.token, { polling: true });
     }
-
   }
 
   listen() {
@@ -24,21 +22,7 @@ export default class Messenger {
   }
 
   handleText(msg) {
-    //format the message
-    const message = new Message(Message.mapMessage(msg));
-    const text = message.text;
-
-    //checking if asked "/progress"
-    if (inputParser.isAskingForProgress(text)) {
-      return handlers.command.getProgress(message, this.bot);
-    }
-
-    //checking if asked "/start"
-    if (inputParser.isAskingForGreeting(text)) {
-      return handlers.command.getGreeting(message, this.bot);
-    }
-
-    // default - send message with help
-    return handlers.command.getHelp(message, this.bot);
+    var message = Message.mapMessage(msg);
+    return handlerRouter.getHandler(message).handle(message, this.bot);
   }
 }

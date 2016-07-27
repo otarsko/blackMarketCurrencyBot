@@ -1,11 +1,4 @@
 export default class Message {
-
-  constructor(msg) {
-    this.from = msg.from
-    this.text = msg.text
-    this.user = msg.user
-  }
-
   static mapMessage(msg) {
     return {
       from: msg.from.id,

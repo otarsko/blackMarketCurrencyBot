@@ -1,7 +1,7 @@
 {
-  "name": "year-progress-bot",
+  "name": "black-market-currency-bot",
   "version": "1.0.0",
-  "description": "The bot to feel how much time you waste.",
+  "description": "",
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/index.js --exec babel-node",
