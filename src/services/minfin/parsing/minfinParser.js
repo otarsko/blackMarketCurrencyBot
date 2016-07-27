@@ -9,10 +9,10 @@ export default class MinfinParser {
     }
 
     //todo: move class names to separate config, use callback, implement
-    getPlayers(url) {
+    getDeals(url, callback) {
         request(url, function(err, resp, body) {
             var $ = cheerio.load(body);
-            var deals = $('.js-au-deal');
+            var dealsEntries = $('.js-au-deal');
         });
     }
 }
