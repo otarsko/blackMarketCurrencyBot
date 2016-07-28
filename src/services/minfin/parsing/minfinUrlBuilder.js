@@ -14,19 +14,19 @@ export default class MinfinUrlBuilder {
             return;
         }
 
-        var userCity = userState.getCity();
-        if (userCity && pathConstants.cityPath[userCity]) {
-            finalUrl += pathConstants.cityPath[userCity];
-        } else {
-            console.error("Not valid city set:", userCity);
-            return;
-        }
-
         var userOperation = userState.getOperation();
         if (userOperation && pathConstants.actionPath[userOperation]) {
             finalUrl += pathConstants.actionPath[userOperation];
         } else {
             console.error("Not valid city set:", userOperation);
+            return;
+        }
+
+        var userCity = userState.getCity();
+        if (userCity && pathConstants.cityPath[userCity]) {
+            finalUrl += pathConstants.cityPath[userCity];
+        } else {
+            console.error("Not valid city set:", userCity);
             return;
         }
 

@@ -1,20 +1,20 @@
 export default class UserState {
 
-    constructor() {
-        this.defaultOperation = "buy";
-        this.defaultCity = "kharkiv";
-        this.defaultCurrency = "usd";
+    constructor(operation, city, currency) {
+        this.operation = operation;
+        this.city = city;
+        this.currency = currency;
     }
 
     getOperation() {
-        return this.defaultOperation;
+        return this.operation;
     }
 
     getCity() {
-        return this.defaultCity;
+        return this.city;
     }
 
     getCurrency() {
-        return this.defaultCurrency;
+        return this.currency;
     }
 }

@@ -25,7 +25,7 @@ export default {
         'sell': '/sell'
     },
     cityPath: {
-        'kharkiv': 'kharkov',
-        'kyiv': 'kiev'
+        'kharkiv': '/kharkov',
+        'kyiv': '/kiev'
     }
 }

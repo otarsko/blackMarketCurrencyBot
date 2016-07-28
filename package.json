@@ -7,7 +7,7 @@
     "start": "nodemon src/index.js --exec babel-node",
     "build": "babel src -d dist --presets es2015,stage-2",
     "serve": "nodemon dist/index.js",
-    "test": "node_modules/.bin/nyc mocha --recursive --compilers js:babel-register \\ ./test/*.js"
+    "test": "node_modules/.bin/nyc mocha --recursive --compilers js:babel-register ./src/**/*.spec.js"
   },
   "dependencies": {
     "node-telegram-bot-api": "^0.21.1",
@@ -22,6 +22,7 @@
     "babel-preset-stage-2": "^6.5.0",
     "babel-register": "^6.9.0",
     "chai": "^3.5.0",
+    "mocha": "^2.5.3",
     "nodemon": "^1.9.2",
     "nyc": "^7.1.0"
   },
