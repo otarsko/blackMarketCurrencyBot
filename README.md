@@ -1,1 +1,1 @@
-A Telegram bot for providing Ukrainian currency black market info, built using Node.js and Babel.js
+A Telegram bot for providing exchange rates from Ukrainian black currency market, which is built using Node.js and Babel.js
