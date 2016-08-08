@@ -7,12 +7,15 @@
     "start": "nodemon src/index.js --exec babel-node",
     "build": "babel src -d dist --presets es2015,stage-2",
     "serve": "nodemon dist/index.js",
-    "test": "node_modules/.bin/nyc mocha --recursive --compilers js:babel-register ./src/**/*.spec.js"
+    "test": "TEST_CONTENT=./testContent node_modules/.bin/nyc mocha --recursive --compilers js:babel-register ./src/**/*.spec.js"
   },
   "dependencies": {
+    "cheerio": "^0.20.0",
+    "condense-whitespace": "^1.0.0",
+    "newline-remove": "^1.0.2",
     "node-telegram-bot-api": "^0.21.1",
     "request": "^2.74.0",
-    "cheerio": "^0.20.0"
+    "striptags": "^2.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

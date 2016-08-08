@@ -34,8 +34,8 @@ describe('Minfin Parser', () => {
             var deal = deals[0];
             deal.getTime().should.equal("11:18");
             deal.getRate().should.equal("25,08");
-            //deal.getAmmount().should.equal("49 999"); // strip tags there, but leave content?
-            //deal.getMessage().should.equal("Simple multiline message."); // remove line breaks.
+            deal.getAmmount().should.equal("49 999 $");
+            deal.getMessage().should.equal("Simple multiline message."); // remove line breaks.
             done()
         });
     });

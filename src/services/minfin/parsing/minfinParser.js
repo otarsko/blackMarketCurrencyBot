@@ -1,5 +1,8 @@
 import Request from 'request';
 import Cheerio from 'cheerio';
+import stripTags from 'striptags';
+import removeNewline from 'newline-remove';
+import condenseWhitespace from 'condense-whitespace';
 import Deal from '../deal.model';
 
 export default class MinfinParser {
@@ -24,7 +27,9 @@ export default class MinfinParser {
                 if (rate && bidId) {
                     var time = $(elem).find(".au-deal-time").html();
                     var sum = $(elem).find(".au-deal-sum").html();
+                    sum = stripTags(sum);
                     var message = $(elem).find(".js-au-msg-wrapper").html();
+                    message = condenseWhitespace(removeNewline(message));
                     deals.push(new Deal(bidId, rate, time, sum, message));
                 }
             });
