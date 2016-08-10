@@ -12,6 +12,7 @@
   "dependencies": {
     "cheerio": "^0.20.0",
     "condense-whitespace": "^1.0.0",
+    "mongoose": "^4.5.8",
     "newline-remove": "^1.0.2",
     "node-telegram-bot-api": "^0.21.1",
     "request": "^2.74.0",
@@ -28,7 +29,10 @@
     "mocha": "^2.5.3",
     "nock": "^8.0.0",
     "nodemon": "^1.9.2",
-    "nyc": "^7.1.0"
+    "nyc": "^7.1.0",
+    "sinon": "^1.17.5",
+    "sinon-as-promised": "^4.0.2",
+    "sinon-mongoose": "^1.2.1"
   },
   "author": "Roman A/Oleksandr T",
   "license": "ISC"

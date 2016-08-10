@@ -6,7 +6,7 @@ export default class MinfinUrlBuilder {
 
     getUrl(userState) {
         var finalUrl = pathConstants.baseUrl + pathConstants.blackMarketPath;
-        var userCurrency = userState.getCurrency();
+        var userCurrency = userState.currency;
         if (userCurrency && pathConstants.currencyPath[userCurrency]) {
             finalUrl += pathConstants.currencyPath[userCurrency];
         } else {
@@ -14,7 +14,7 @@ export default class MinfinUrlBuilder {
             return;
         }
 
-        var userOperation = userState.getOperation();
+        var userOperation = userState.operation;
         if (userOperation && pathConstants.actionPath[userOperation]) {
             finalUrl += pathConstants.actionPath[userOperation];
         } else {
@@ -22,7 +22,7 @@ export default class MinfinUrlBuilder {
             return;
         }
 
-        var userCity = userState.getCity();
+        var userCity = userState.city;
         if (userCity && pathConstants.cityPath[userCity]) {
             finalUrl += pathConstants.cityPath[userCity];
         } else {
