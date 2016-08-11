@@ -14,7 +14,7 @@
     "condense-whitespace": "^1.0.0",
     "mongoose": "^4.5.8",
     "newline-remove": "^1.0.2",
-    "node-telegram-bot-api": "^0.21.1",
+    "node-telegram-bot-api": "^0.23.3",
     "request": "^2.74.0",
     "striptags": "^2.1.1"
   },
