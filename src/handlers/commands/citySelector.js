@@ -1,11 +1,11 @@
 
-function getCitiesKeyboardOptions() {
+function getCitiesKeyboardOptions(callbackDataPrefix) {
     return {
         reply_markup: JSON.stringify({
             inline_keyboard: [
-                [{ text: 'City 1', callback_data: 'city_1' }],
-                [{ text: 'City 2', callback_data: 'city_2' }],
-                [{ text: 'City 3', callback_data: 'city_3' }]
+                [{ text: 'Kiev', callback_data: callbackDataPrefix + 'city_1' }],
+                [{ text: 'Kharkiv', callback_data: callbackDataPrefix + 'city_2' }],
+                [{ text: 'Dnipro', callback_data: callbackDataPrefix + 'city_3' }]
             ]
         })
     };
@@ -15,10 +15,10 @@ export default class HelloHandler {
     constructor() {
     }
 
-    handle(message, bot) {
+    handle(message, bot, callbackDataPrefix) {
         bot.sendMessage(message.from,
             'Please select the city you are interested in.',
-            getCitiesKeyboardOptions());
+            getCitiesKeyboardOptions(callbackDataPrefix));
     }
 
     handleCallbackQuery(message, bot) {

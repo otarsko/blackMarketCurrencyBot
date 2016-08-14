@@ -1,13 +1,23 @@
 import Help from './commands/help';
 import CitySelector from './commands/citySelector';
+import CurrencySelector from './commands/currencySelector';
+import OperationSelector from './commands/operationSelector';
+import SetUp from './commands/setUp';
 
 const DEFAULT_NANDLER_KEY = 'help';
 export default class HandlerRouter {
 
   constructor() {
+    var citySelectorHandler = new CitySelector();
+    var currencySelectorHandler = new CurrencySelector();
+    var operationSelectorHandler = new OperationSelector();
+
     this.handlers = {
       'help': new Help(),
-      'city': new CitySelector()
+      'city': citySelectorHandler,
+      'currency': currencySelectorHandler,
+      'operation': operationSelectorHandler,
+      'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler)
     }
   }
 
