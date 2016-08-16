@@ -12,6 +12,7 @@
   "dependencies": {
     "cheerio": "^0.20.0",
     "condense-whitespace": "^1.0.0",
+    "lodash": "^4.15.0",
     "mongoose": "^4.5.8",
     "newline-remove": "^1.0.2",
     "node-telegram-bot-api": "^0.23.3",

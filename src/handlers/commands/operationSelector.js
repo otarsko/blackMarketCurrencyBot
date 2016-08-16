@@ -1,11 +1,14 @@
+"use strict";
 
-function getOperationsKeyboardOptions(callbackDataPrefix) {
+const COMMAND_PREFIX = 'operation_'; //todo: move to another place?
+
+function getOperationsKeyboardOptions(callbackDataPrefix) { //todo: get from mongodb?
     callbackDataPrefix = callbackDataPrefix || '';
     return {
         reply_markup: JSON.stringify({
             inline_keyboard: [
-                [{ text: 'op 1', callback_data: callbackDataPrefix + 'operation_1' }],
-                [{ text: 'op 2', callback_data: callbackDataPrefix + 'operation_2' }]
+                [{ text: 'Buy', callback_data: callbackDataPrefix + 'buy' }],
+                [{ text: 'Sell', callback_data: callbackDataPrefix + 'sell' }]
             ]
         })
     };
@@ -16,7 +19,7 @@ export default class OperationSelector {
     handle(message, bot, callbackDataPrefix) {
         bot.sendMessage(message.from,
             'Please select the operation you are interested in.',
-            getOperationsKeyboardOptions(callbackDataPrefix));
+            getOperationsKeyboardOptions(callbackDataPrefix + COMMAND_PREFIX));
     }
 
     handleCallbackQuery(message, bot) {

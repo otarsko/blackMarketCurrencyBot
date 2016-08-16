@@ -1,3 +1,4 @@
+"use strict";
 const COMMAND_PREFIX = 'setup_';
 
 function triggerNextHandler(currentHandlerName, message, bot) {
@@ -13,6 +14,7 @@ function triggerNextHandler(currentHandlerName, message, bot) {
         nextHandlerName = this.handlersFlow[indexOfCurrentHandler + 1];
     }
     nextHandlerName = nextHandlerName || this.handlersFlow[0];
+
     this.setUpHandlers[nextHandlerName].handle(message, bot, COMMAND_PREFIX);
 }
 
@@ -21,7 +23,7 @@ export default class SetUpHandler {
         this.setUpHandlers = {
             'city': citySelectorHandler,
             'currency': currencySelectorHandler,
-            'operation': operationSelectorHandler,
+            'operation': operationSelectorHandler
         };
         this.handlersFlow = ['city', 'currency', 'operation'];
     }

@@ -12,8 +12,8 @@ describe('SetUp command handler', function() {
     beforeEach(function() {
         citySelector = getDummyHandler(),
             currencySelector = getDummyHandler(),
-            operationSelector = getDummyHandler(),
-            setUpHandler = new SetUp(citySelector, currencySelector, operationSelector);
+            operationSelector = getDummyHandler();
+        setUpHandler = new SetUp(citySelector, currencySelector, operationSelector);
     });
 
     describe('Handle', function() {
@@ -56,6 +56,8 @@ describe('SetUp command handler', function() {
             setUpHandler.handleCallbackQuery({data: 'setup_ololohandleme_somedata'}); //todo: get from constants
             mock.verify();
         });
+
+        //todo: add checking of new Promise stuff
     });
 
     function getDummyHandler() {

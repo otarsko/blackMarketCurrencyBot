@@ -9,7 +9,7 @@ var UserStateSchema = new mongoose.Schema({
     currency: String
 });
 
-UserStateSchema.statics.createInstance = function (userId, operation, city, currency) {
+UserStateSchema.statics.createInstance = function (userId, city, operation, currency) {
     var userState = new this();
     userState.userId = userId;
     userState.operation = operation;
