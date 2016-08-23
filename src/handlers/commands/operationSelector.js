@@ -1,5 +1,5 @@
 "use strict";
-import CommandException from '../../lib/commandException';
+import CommandException from '../../lib/exception/commandException';
 import UserState from '../../services/userState/userState.model';
 
 const COMMAND_PREFIX = 'operation_'; //todo: move to another place?

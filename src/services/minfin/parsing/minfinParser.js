@@ -4,30 +4,29 @@ import stripTags from 'striptags';
 import removeNewline from 'newline-remove';
 import condenseWhitespace from 'condense-whitespace';
 import agents from 'fake-user-agent';
+import Promise from 'bluebird';
+import RequestPromise from 'request-promise';
 import Deal from '../deal.model';
 
 export default class MinfinParser {
 
-    constructor() {
-        this.cheerio = new Cheerio();
-    }
-
-    //todo: use request-promise and handle bad response
     //todo: move class names to separate config, use callback, implement
-    getDeals(url, callback) {
+    getDeals(url) {
         if (!url) {
             console.error("Got undefined url");
-            callback([]);
-            return;
+            return Promise.reject(new Error('Undefined url'));
         }
+
         var options = {
             url: url,
             headers: {
                 'User-Agent': agents.IE9
+            },
+            transform: (body) => {
+                return Cheerio.load(body);
             }
         };
-        new Request(options, function (err, resp, body) {
-            var $ = Cheerio.load(body);
+        return new RequestPromise(options).then($ => {
             var deals = [];
             $('.js-au-deal').each(function(i, elem) {
                 var bidId = $(elem).data("bid");
@@ -43,8 +42,9 @@ export default class MinfinParser {
             });
             if (deals.length === 0) {
                 console.error("No deals found for url: " + url);
+                return Promise.reject(new Error('No deals found'));
             }
-            callback(deals);
+            return deals;
         });
     }
 }

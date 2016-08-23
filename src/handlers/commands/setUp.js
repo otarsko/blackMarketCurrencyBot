@@ -1,5 +1,5 @@
 "use strict";
-import CommandException from '../../lib/commandException';
+import CommandException from '../../lib/exception/commandException';
 
 const COMMAND_PREFIX = 'setup_';
 
