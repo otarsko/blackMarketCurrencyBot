@@ -1,5 +1,4 @@
 "use strict";
-import _ from 'lodash';
 import CommandException from '../../lib/commandException';
 import UserState from '../../services/userState/userState.model';
 
@@ -16,42 +15,30 @@ function getCitiesKeyboardOptions(callbackDataPrefix) { //todo: get from mongodb
     };
 }
 
-function updateUserState(userId, city) {
-    return function(userState) {
-        var updatedUserState;
-        if (userState) {
-            updatedUserState = _.merge(userState, {'city': city});
-        } else {
-            updatedUserState = UserState.createInstance(userId, city);
-        }
-        return updatedUserState;
-    }
-}
-
 export default class CitySelectorHandler {
 
     handle(message, bot, callbackDataPrefix) {
+        var parentHandlerPrefix = callbackDataPrefix || '';
         return bot.sendMessage(message.from,
             'Please select the city you are interested in.',
-            getCitiesKeyboardOptions(callbackDataPrefix + COMMAND_PREFIX));
+            getCitiesKeyboardOptions(parentHandlerPrefix + COMMAND_PREFIX));
     }
 
-    handleCallbackQuery(message, bot) {
-        console.log(message);
+    handleCallbackQuery(message, bot, triggeredExternally) {
         var city = message.data.split('_')[1];
 
         return UserState.findOne({'userId': message.from}).exec()
-            .then(updateUserState(message.from, city))
+            .then(UserState.updateUserState(message.from, {'city': city}))
             .then(userState => {
-                console.log('near to save', userState);
                 return userState.save();
             })
             .then(() => {
-                console.log('near to message');
                 return bot.sendMessage(message.from, 'City has been set successfully.')
             })
             .catch((err) => {
-                console.error('Got error on saving user status: ', err);
+                if (!triggeredExternally) {
+                    bot.sendMessage(message.from, 'Sorry, something went wrong. Try a bit later.'); //todo: copy-paste
+                }
                 return new CommandException(err.message);
             });
     };

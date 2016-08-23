@@ -108,33 +108,33 @@ describe('CitySelectorHandler', function() {
         });
 
         //todo: too many mocks. Prefer stubs?
-        it('Should create and save new user state if not found existing', function(done) {
-            modelMock.expects('findOne').withArgs({userId: 'notExistingUserId'})
-                .chain('exec')
-                .resolves(null);
-
-            newUserStateMock.expects('save')
-                .resolves('some_result');
-
-            var message = {
-                data: 'prefix_city2',
-                from: 'notExistingUserId'
-            };
-
-            modelMock.expects('createInstance')
-                .withArgs('notExistingUserId', 'city2')
-                .returns(newUserStateInstance);
-
-            citySelectorHandler.handleCallbackQuery(message, mockBot())
-                .then(function(data) {
-
-                    console.log('in then');
-                    modelMock.verify();
-                    newUserStateMock.verify();
-
-                    done();
-                });
-        })
+        //todo: this should userState.model
+        //it('Should create and save new user state if not found existing', function(done) {
+        //    modelMock.expects('findOne').withArgs({userId: 'notExistingUserId'})
+        //        .chain('exec')
+        //        .resolves(null);
+        //
+        //    newUserStateMock.expects('save')
+        //        .resolves('some_result');
+        //
+        //    var message = {
+        //        data: 'prefix_city2',
+        //        from: 'notExistingUserId'
+        //    };
+        //
+        //    modelMock.expects('createInstance')
+        //        .withArgs('notExistingUserId', 'city2')
+        //        .returns(newUserStateInstance);
+        //
+        //    citySelectorHandler.handleCallbackQuery(message, mockBot())
+        //        .then(function(data) {
+        //
+        //            modelMock.verify();
+        //            newUserStateMock.verify();
+        //
+        //            done();
+        //        });
+        //})
     });
 
     function mockBot() {

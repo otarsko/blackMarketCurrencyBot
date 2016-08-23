@@ -3,8 +3,9 @@ import CitySelector from './commands/citySelector';
 import CurrencySelector from './commands/currencySelector';
 import OperationSelector from './commands/operationSelector';
 import SetUp from './commands/setUp';
+import Get from './commands/get';
 
-const DEFAULT_NANDLER_KEY = 'help';
+const DEFAULT_HANDLER_KEY = 'help';
 export default class HandlerRouter {
 
   constructor() {
@@ -17,7 +18,8 @@ export default class HandlerRouter {
       'city': citySelectorHandler,
       'currency': currencySelectorHandler,
       'operation': operationSelectorHandler,
-      'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler)
+      'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler),
+      'get' : new Get()
     }
   }
 
@@ -26,7 +28,7 @@ export default class HandlerRouter {
     if (key.indexOf('/') == 0) {
       key = key.substr(1);
     }
-    return this.handlers[key] || this.handlers[DEFAULT_NANDLER_KEY];
+    return this.handlers[key] || this.handlers[DEFAULT_HANDLER_KEY];
   }
 
   getCallbackQueryHandler(message) {
@@ -34,6 +36,6 @@ export default class HandlerRouter {
     if (key.indexOf('_') > -1) {
       key = key.substr(0, key.indexOf('_'));
     }
-    return this.handlers[key] || this.handlers[DEFAULT_NANDLER_KEY];
+    return this.handlers[key] || this.handlers[DEFAULT_HANDLER_KEY];
   }
 }

@@ -3,6 +3,7 @@ import Cheerio from 'cheerio';
 import stripTags from 'striptags';
 import removeNewline from 'newline-remove';
 import condenseWhitespace from 'condense-whitespace';
+import agents from 'fake-user-agent';
 import Deal from '../deal.model';
 
 export default class MinfinParser {
@@ -11,6 +12,7 @@ export default class MinfinParser {
         this.cheerio = new Cheerio();
     }
 
+    //todo: use request-promise and handle bad response
     //todo: move class names to separate config, use callback, implement
     getDeals(url, callback) {
         if (!url) {
@@ -18,7 +20,13 @@ export default class MinfinParser {
             callback([]);
             return;
         }
-        new Request(url, function (err, resp, body) {
+        var options = {
+            url: url,
+            headers: {
+                'User-Agent': agents.IE9
+            }
+        };
+        new Request(options, function (err, resp, body) {
             var $ = Cheerio.load(body);
             var deals = [];
             $('.js-au-deal').each(function(i, elem) {
