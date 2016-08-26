@@ -39,7 +39,7 @@ function getDeals(urlBuilder, parser, userState) {
                 } else {
 
                     log.verbose('', 'Got no cached deal to be returned');
-                    return cacheAndGetDeals(parser, url);
+                    return cacheAndGetDeals(parser, url, cachedDeal);
                 }
             });
     } else {
@@ -48,16 +48,23 @@ function getDeals(urlBuilder, parser, userState) {
     }
 }
 
-function cacheAndGetDeals(parser, url) {
+function cacheAndGetDeals(parser, url, cachedDeal) {
     log.verbose('', 'Will get deals and cache them for url %s', url);
     return parser.getDeals(url)
         .then(deals => {
            if (deals) {
                log.verbose('', 'Got %s deals for url %s. Will cache them and return result', deals.length, url);
-               var cachedDeal = new CachedDeal({
-                   'url': url,
-                   'deals': deals
-               });
+
+               if(cachedDeal) {
+                   log.verbose('', 'Will update existing cached deals');
+                   cachedDeal.deals = deals;
+               } else {
+                   log.verbose('', 'Will create new instance of cached deals');
+                   cachedDeal = new CachedDeal({
+                       'url': url,
+                       'deals': deals
+                   });
+               }
                return cachedDeal.save();
            }
         })
@@ -66,6 +73,9 @@ function cacheAndGetDeals(parser, url) {
         });
 }
 
+
+//todo: too many code there, should split
+//todo: to many nested promises
 export default class DealsDataProvider {
 
     constructor() {
