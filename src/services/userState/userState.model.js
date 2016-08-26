@@ -10,13 +10,15 @@ var UserStateSchema = new mongoose.Schema({
     currency: String
 });
 
+//todo: fix issue with 'TypeError: this is not a constructor'. Bind instead of call?
 UserStateSchema.statics.updateUserState = function(userId, updates) {
+    var self = this;
     return function(userState) {
         var updatedUserState;
         if (userState) {
             updatedUserState = _.merge(userState, updates);
         } else {
-            updatedUserState = UserStateSchema.statics.createInstance(userId, updates.city, updates.operation, updates.currency);
+            updatedUserState = UserStateSchema.statics.createInstance.call(self, userId, updates.city, updates.operation, updates.currency);
         }
         return updatedUserState;
     }

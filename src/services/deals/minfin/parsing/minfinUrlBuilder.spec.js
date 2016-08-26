@@ -1,5 +1,5 @@
 import MinfinUrlBuilder from './minfinUrlBuilder';
-import UserState from '../../userState/userState.model';
+import UserState from '../../../userState/userState.model';
 import chai, {should} from 'chai';
 
 should();

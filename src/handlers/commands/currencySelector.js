@@ -38,6 +38,7 @@ export default class CurrencyHandler {
                 return bot.sendMessage(message.from, 'Currency has been set successfully.')
             })
             .catch((err) => {
+                console.error(err);
                 if (!triggeredExternally) {
                     bot.sendMessage(message.from, 'Sorry, something went wrong. Try a bit later.'); //todo: copy-paste
                 }

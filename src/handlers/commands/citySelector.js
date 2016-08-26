@@ -36,6 +36,7 @@ export default class CitySelectorHandler {
                 return bot.sendMessage(message.from, 'City has been set successfully.')
             })
             .catch((err) => {
+                console.error(err);
                 if (!triggeredExternally) {
                     bot.sendMessage(message.from, 'Sorry, something went wrong. Try a bit later.'); //todo: copy-paste
                 }
