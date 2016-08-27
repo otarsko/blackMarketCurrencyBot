@@ -3,7 +3,7 @@ import CitySelector from './commands/citySelector';
 import CurrencySelector from './commands/currencySelector';
 import OperationSelector from './commands/operationSelector';
 import SetUp from './commands/setUp';
-import Get from './commands/get';
+import Latest5Deals from './commands/deals/latest5Deals.js';
 
 const DEFAULT_HANDLER_KEY = 'help';
 export default class HandlerRouter {
@@ -19,7 +19,7 @@ export default class HandlerRouter {
       'currency': currencySelectorHandler,
       'operation': operationSelectorHandler,
       'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler),
-      'get' : new Get()
+      'latest5' : new Latest5Deals()
     }
   }
 

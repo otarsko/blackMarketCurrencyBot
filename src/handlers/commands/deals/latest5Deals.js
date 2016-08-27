@@ -1,17 +1,18 @@
 import Promise from 'bluebird';
-import NotFilledPreferencesException from '../../lib/exception/NotFilledPreferencesException'
-import DealsDataProvider from '../../services/deals/dealsDataProvider'
-import UserState from '../../services/userState/userState.model'
-import DealsMessageFormatter from '../../services/deals/dealsMessageFormatter'
+import log from 'npmlog';
 
-export default class HandlerRouter {
+import NotFilledPreferencesException from '../../../lib/exception/NotFilledPreferencesException'
+import DealsDataProvider from '../../../services/deals/dealsDataProvider'
+import UserState from '../../../services/userState/userState.model'
+import DealsMessageFormatter from '../../../services/deals/dealsMessageFormatter'
+
+export default class Latest5DealsHandler {
 
     constructor() {
         this.dealsProvider = new DealsDataProvider();
         this.messageFormatter = new DealsMessageFormatter();
     }
 
-    //todo: handle case when user filled his settings only partially.
     handle(message, bot) {
         UserState.findOne({'userId': message.from}).exec()
             .then(userState => {
@@ -30,6 +31,7 @@ export default class HandlerRouter {
             })
             .catch((error) => {
                 if (error instanceof NotFilledPreferencesException) {
+                    log.verbose('', 'Got error %j', error);
                     bot.sendMessage(message.from, 'You should first set up your preferences. Type /help for more info.');
                 } else {
                     console.error(error);
