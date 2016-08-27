@@ -1,13 +1,14 @@
-import he from 'he'
 import Promise from 'bluebird';
 import NotFilledPreferencesException from '../../lib/exception/NotFilledPreferencesException'
 import DealsDataProvider from '../../services/deals/dealsDataProvider'
 import UserState from '../../services/userState/userState.model'
+import DealsMessageFormatter from '../../services/deals/dealsMessageFormatter'
 
 export default class HandlerRouter {
 
     constructor() {
         this.dealsProvider = new DealsDataProvider();
+        this.messageFormatter = new DealsMessageFormatter();
     }
 
     //todo: handle case when user filled his settings only partially.
@@ -20,10 +21,12 @@ export default class HandlerRouter {
                 return Promise.reject(new NotFilledPreferencesException('No user state found for user id: ' + message.from));
             })
             .then((userId) => {
-                return this.dealsProvider.getDeals(userId);
+                return this.dealsProvider.getLast5Deals(userId);
             })
             .then((deals) => {
-                return bot.sendMessage(message.from, he.decode(deals[0].message));
+                return bot.sendMessage(message.from,
+                    this.messageFormatter.formatDeals(deals),
+                    this.messageFormatter.getMessageOptions());
             })
             .catch((error) => {
                 if (error instanceof NotFilledPreferencesException) {

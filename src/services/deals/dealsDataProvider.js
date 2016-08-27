@@ -99,4 +99,16 @@ export default class DealsDataProvider {
                 }
             });
     }
+
+    getLast5Deals(userId) {
+        log.verbose('', 'Getting last 5 deals for user %s', userId);
+        return this.getDeals(userId)
+            .then(deals => {
+                if (deals && deals.length > 5) {
+                    return deals.slice(0, 6);
+                } else {
+                    return deals;
+                }
+            });
+    }
 }
