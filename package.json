@@ -15,7 +15,7 @@
     "fake-user-agent": "0.0.1",
     "he": "^1.1.0",
     "lodash": "^4.15.0",
-    "mongoose": "^4.5.8",
+    "mongoose": "^4.5.9",
     "newline-remove": "^1.0.2",
     "node-telegram-bot-api": "^0.23.3",
     "npmlog": "^4.0.0",

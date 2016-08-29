@@ -7,14 +7,14 @@ import UserState from '../userState/userState.model';
 import NotFilledPreferencesException from '../../lib/exception/NotFilledPreferencesException';
 import CachedDeal from './cache/cachedDeal.model';
 
-const DEALS_EXPIRATION_TIMEOUT = 1000 * 60 * 15; //15 mins
+const DEALS_EXPIRATION_TIMEOUT = 1000 * 60 * 30; //30 mins
 
 function checkIfCanProvideDeals(userState) {
     return userState.operation && userState.city && userState.currency;
 }
 
 function checkIfNotExpired(cachedDeal) {
-    var modelUpdateTime = cachedDeal.updatedAt || cachedDeal.createdAt;
+    var modelUpdateTime = cachedDeal.createdAt;
 
     var now = new Date();
     var timeDiff = Math.abs(modelUpdateTime - now.getTime());
@@ -50,21 +50,32 @@ function getDeals(urlBuilder, parser, userState) {
 
 function cacheAndGetDeals(parser, url, cachedDeal) {
     log.verbose('', 'Will get deals and cache them for url %s', url);
-    return parser.getDeals(url)
+
+    var removeCachedPromise;
+    if (cachedDeal) {
+
+        //done in this way, because we can not use updatedAt to track last deals update (because we are saving phone
+        //numbers later and it's getting updated) so we need to force createdAt to be updated.
+        log.verbose('DealsDataProvider', 'First we will remove already cached deals.');
+        removeCachedPromise = cachedDeal.remove();
+    } else {
+
+        //just do nothing
+        removeCachedPromise = Promise.resolve();
+    }
+
+    return removeCachedPromise
+        .then(() => parser.getDeals(url))
         .then(deals => {
            if (deals) {
                log.verbose('', 'Got %s deals for url %s. Will cache them and return result', deals.length, url);
 
-               if(cachedDeal) {
-                   log.verbose('', 'Will update existing cached deals');
-                   cachedDeal.deals = deals;
-               } else {
-                   log.verbose('', 'Will create new instance of cached deals');
-                   cachedDeal = new CachedDeal({
-                       'url': url,
-                       'deals': deals
-                   });
-               }
+               log.verbose('', 'Will create new instance of cached deals');
+               cachedDeal = new CachedDeal({
+                   'url': url,
+                   'deals': deals
+               });
+
                return cachedDeal.save();
            }
         })
@@ -105,7 +116,7 @@ export default class DealsDataProvider {
         return this.getDeals(userId)
             .then(deals => {
                 if (deals && deals.length > 5) {
-                    return deals.slice(0, 6);
+                    return deals.slice(0, 5);
                 } else {
                     return deals;
                 }

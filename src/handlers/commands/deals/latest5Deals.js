@@ -1,16 +1,39 @@
+'use strict';
+
 import Promise from 'bluebird';
 import log from 'npmlog';
+import _ from 'lodash';
 
 import NotFilledPreferencesException from '../../../lib/exception/NotFilledPreferencesException'
 import DealsDataProvider from '../../../services/deals/dealsDataProvider'
 import UserState from '../../../services/userState/userState.model'
 import DealsMessageFormatter from '../../../services/deals/dealsMessageFormatter'
+import DealPhoneNumberProvider from '../../../services/deals/dealPhoneNumberProvider'
+
+const COMMAND_PREFIX = 'latest5_'; //todo: move to another place?
+
+function getPhoneNumberSelectKeyboard(deals) {
+
+    var keyboard = [];
+    deals.forEach((deal, index) => {
+       keyboard.push([{
+           text: '' + index,
+           callback_data: `${COMMAND_PREFIX}${deal.bidId}`
+       }])
+    });
+    return {
+        reply_markup: JSON.stringify({
+            inline_keyboard: keyboard
+        })
+    };
+}
 
 export default class Latest5DealsHandler {
 
     constructor() {
         this.dealsProvider = new DealsDataProvider();
         this.messageFormatter = new DealsMessageFormatter();
+        this.phoneNumberProvider = new DealPhoneNumberProvider();
     }
 
     handle(message, bot) {
@@ -25,9 +48,11 @@ export default class Latest5DealsHandler {
                 return this.dealsProvider.getLast5Deals(userId);
             })
             .then((deals) => {
+                var messageOptions = this.messageFormatter.getMessageOptions();
+                _.merge(messageOptions, getPhoneNumberSelectKeyboard(deals));
+
                 return bot.sendMessage(message.from,
-                    this.messageFormatter.formatDeals(deals),
-                    this.messageFormatter.getMessageOptions());
+                    this.messageFormatter.formatDeals(deals), messageOptions);
             })
             .catch((error) => {
                 if (error instanceof NotFilledPreferencesException) {
@@ -39,4 +64,24 @@ export default class Latest5DealsHandler {
                 }
             });
     }
+
+    /**
+     * Returns phone number for requested deal.
+     *
+     * @param message
+     * @param bot
+     */
+    handleCallbackQuery(message, bot) {
+        log.verbose('Latest5DealsHandler', `Handling callback query with data ${message.data}`);
+        var dealId = message.data.split('_')[1];
+
+        this.phoneNumberProvider.getPhoneNumber(dealId)
+            .then(phoneNumber => {
+                return bot.sendMessage(message.from, `Phone number is ${phoneNumber}`);
+            })
+            .catch(error => {
+                console.error(error);
+                bot.sendMessage(message.from, 'Sorry we got error, please try later');
+            })
+    };
 }
