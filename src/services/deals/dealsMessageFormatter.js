@@ -13,17 +13,18 @@ export default class DealsMessageFormatter {
             return 'No deals found.';
         }
 
-        var maxCharsPerMessage = MAX_CHARS_IN_MESSAGE / deals.length;
+        var phoneNumberRequestMessage = '\nTo get phone number please use keyboard bellow.';
+        var maxCharsPerMessage = (MAX_CHARS_IN_MESSAGE - phoneNumberRequestMessage.length) / deals.length;
         var message = '';
-        deals.forEach(elem => {
-            var dealMessage = `*Time posted*: ${elem.time}\n*Rate*: ${he.decode(elem.rate)}\n`
+        deals.forEach((elem, index) => {
+            var dealMessage = `\`${index + 1}\`*Time posted*: ${elem.time}\n*Rate*: ${he.decode(elem.rate)}\n`
                 + `*Amount*: ${he.decode(elem.ammount)}\n*Message*: ${he.decode(elem.message)}\n\n`;
             if (dealMessage.length > maxCharsPerMessage) {
                 dealMessage = dealMessage.substring(0, maxCharsPerMessage - 5) + '...\n\n';
             }
             message += dealMessage;
         });
-        return message;
+        return message + phoneNumberRequestMessage;
     }
 
     //todo: return together with formatted deals?

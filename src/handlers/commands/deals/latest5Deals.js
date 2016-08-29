@@ -14,16 +14,16 @@ const COMMAND_PREFIX = 'latest5_'; //todo: move to another place?
 
 function getPhoneNumberSelectKeyboard(deals) {
 
-    var keyboard = [];
+    var buttons = [];
     deals.forEach((deal, index) => {
-       keyboard.push([{
-           text: '' + index,
+        buttons.push({
+           text: '' + (index + 1),
            callback_data: `${COMMAND_PREFIX}${deal.bidId}`
-       }])
+       })
     });
     return {
         reply_markup: JSON.stringify({
-            inline_keyboard: keyboard
+            inline_keyboard: _.chunk(buttons, 3)
         })
     };
 }
