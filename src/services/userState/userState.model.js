@@ -7,7 +7,8 @@ var UserStateSchema = new mongoose.Schema({
     userId: String,
     operation: String,
     city: String,
-    currency: String
+    currency: String,
+    language: String
 });
 
 //todo: fix issue with 'TypeError: this is not a constructor'. Bind instead of call?
