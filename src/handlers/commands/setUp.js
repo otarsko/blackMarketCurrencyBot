@@ -21,13 +21,14 @@ function triggerNextHandler(currentHandlerName, message, bot) {
 }
 
 export default class SetUpHandler {
-    constructor(citySelectorHandler, currencySelectorHandler, operationSelectorHandler) {
+    constructor(citySelectorHandler, currencySelectorHandler, operationSelectorHandler, languageSelector) {
         this.setUpHandlers = {
+            'lang': languageSelector,
             'city': citySelectorHandler,
             'currency': currencySelectorHandler,
             'operation': operationSelectorHandler
         };
-        this.handlersFlow = ['city', 'currency', 'operation'];
+        this.handlersFlow = ['lang', 'city', 'currency', 'operation'];
     }
 
     handle(message, bot) {
@@ -44,7 +45,7 @@ export default class SetUpHandler {
             return currentHandler.handleCallbackQuery(message, bot, true).then(data => {
                 if (data && data instanceof CommandException) {
                     console.error('Can not handle message, got error.', message, data);
-                    return bot.sendMessage(message.from, 'Sorry, something went wrong. Try a bit later.');
+                    return bot.sendMessage(message.from, message.__('bot_error'));
                 } else {
                     return triggerNextHandler.call(this, currentHandlerName, message, bot);
                 }

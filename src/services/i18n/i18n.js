@@ -1,29 +1,27 @@
+"use strict";
+
 import Promise from 'bluebird';
 import log from 'npmlog';
 import i18n from 'i18n';
 
-import UserState from '../userState/userState.model';
-
-const DEFAULT_LANGUAGE = "en";
+import UserState from '../../services/userState/userState.model';
 
 export default class I18n {
 
-    //todo: request MongoDB on each message? Not really nice.
-    get(userId, messageKey) {
-        return UserState.findOne({'userId': userId}).exec()
+    init(message) {
+        return UserState.findOne({'userId': message.from}).exec()
             .then(userState => {
+                i18n.init(message);
                 if (userState && userState.language) {
-                    return userId.language
-                } else {
-                    return Promise.reject(new Error('No language found in user preferences'))
+                    i18n.setLocale(message, userState.language);
                 }
+                return message;
             })
-            .catch(err => {
-                log.verbose('I18n', `No language found for user ${userId}. Will use default - ${DEFAULT_LANGUAGE}`);
-                return DEFAULT_LANGUAGE;
-            })
-            .then(language => {
-                return i18n.__(messageKey);
-            })
+    }
+
+    updateLanguage(message, language) {
+        if (language) {
+            i18n.setLocale(message, language);
+        }
     }
 }

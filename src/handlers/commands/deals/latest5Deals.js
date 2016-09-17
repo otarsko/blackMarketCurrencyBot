@@ -52,15 +52,15 @@ export default class Latest5DealsHandler {
                 _.merge(messageOptions, getPhoneNumberSelectKeyboard(deals));
 
                 return bot.sendMessage(message.from,
-                    this.messageFormatter.formatDeals(deals), messageOptions);
+                    this.messageFormatter.formatDeals(message, deals), messageOptions);
             })
             .catch((error) => {
                 if (error instanceof NotFilledPreferencesException) {
-                    log.verbose('', 'Got error %j', error);
-                    bot.sendMessage(message.from, 'You should first set up your preferences. Type /help for more info.');
+                    log.verbose('Latest5DealsHandler', 'Got error %j', error);
+                    bot.sendMessage(message.from, message.__('error_setup_account'));
                 } else {
-                    console.error(error);
-                    bot.sendMessage(message.from, 'Sorry we got error, please try later');
+                    log.error('Latest5DealsHandler', 'Got error %j', error);
+                    bot.sendMessage(message.from, message.__('bot_error'));
                 }
             });
     }
@@ -77,11 +77,11 @@ export default class Latest5DealsHandler {
 
         this.phoneNumberProvider.getPhoneNumber(dealId)
             .then(phoneNumber => {
-                return bot.sendMessage(message.from, `Phone number is ${phoneNumber}`);
+                return bot.sendMessage(message.from, message.__('phone_number', phoneNumber));
             })
             .catch(error => {
                 console.error(error);
-                bot.sendMessage(message.from, 'Sorry we got error, please try later');
+                bot.sendMessage(message.from, message.__('bot_error'));
             })
     };
 }

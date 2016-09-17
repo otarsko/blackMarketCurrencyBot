@@ -13,15 +13,16 @@ export default class HandlerRouter {
     var citySelectorHandler = new CitySelector();
     var currencySelectorHandler = new CurrencySelector();
     var operationSelectorHandler = new OperationSelector();
+    var languageSelector = new LanguageSelector();
 
-    this.handlers = {
+      this.handlers = {
       'help': new Help(),
       'city': citySelectorHandler,
       'currency': currencySelectorHandler,
       'operation': operationSelectorHandler,
-      'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler),
+      'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler, languageSelector),
       'latest5' : new Latest5Deals(),
-      'lang' : new LanguageSelector()
+      'lang' : languageSelector
     }
   }
 

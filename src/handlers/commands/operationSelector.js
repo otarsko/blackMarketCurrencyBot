@@ -4,13 +4,15 @@ import UserState from '../../services/userState/userState.model';
 
 const COMMAND_PREFIX = 'operation_'; //todo: move to another place?
 
-function getOperationsKeyboardOptions(callbackDataPrefix) { //todo: get from mongodb?
+function getOperationsKeyboardOptions(message, callbackDataPrefix) { //todo: get from mongodb?
     callbackDataPrefix = callbackDataPrefix || '';
     return {
         reply_markup: JSON.stringify({
             inline_keyboard: [
-                [{ text: 'Buy', callback_data: callbackDataPrefix + 'buy' }],
-                [{ text: 'Sell', callback_data: callbackDataPrefix + 'sell' }]
+                [
+                    { text: message.__('buy'), callback_data: callbackDataPrefix + 'buy' },
+                    { text: message.__('sell'), callback_data: callbackDataPrefix + 'sell' }
+                ]
             ]
         })
     };
@@ -21,8 +23,8 @@ export default class OperationSelector {
     handle(message, bot, callbackDataPrefix) {
         var parentHandlerPrefix = callbackDataPrefix || '';
         return bot.sendMessage(message.from,
-            'Please select the operation you are interested in.',
-            getOperationsKeyboardOptions(parentHandlerPrefix + COMMAND_PREFIX));
+            message.__('select_operation'),
+            getOperationsKeyboardOptions(message, parentHandlerPrefix + COMMAND_PREFIX));
     }
 
     //todo: almost the same as in other selectors. Refactor.
@@ -35,12 +37,12 @@ export default class OperationSelector {
                 return userState.save();
             })
             .then(() => {
-                return bot.sendMessage(message.from, 'Operation has been set successfully.')
+                return bot.sendMessage(message.from, message.__('operation_changed'))
             })
             .catch((err) => {
                 console.error(err);
                 if (!triggeredExternally) {
-                    bot.sendMessage(message.from, 'Sorry, something went wrong. Try a bit later.'); //todo: copy-paste
+                    bot.sendMessage(message.from, message.__('bot_error')); //todo: copy-paste
                 }
                 return new CommandException(err.message);
             });
