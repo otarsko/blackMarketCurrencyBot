@@ -37,16 +37,7 @@ export default class Latest5DealsHandler {
     }
 
     handle(message, bot) {
-        UserState.findOne({'userId': message.from}).exec()
-            .then(userState => {
-                if (userState) {
-                    return userState.userId;
-                }
-                return Promise.reject(new NotFilledPreferencesException('No user state found for user id: ' + message.from));
-            })
-            .then((userId) => {
-                return this.dealsProvider.getLast5Deals(userId);
-            })
+        return this.dealsProvider.getLast5Deals(message.from)
             .then((deals) => {
                 var messageOptions = this.messageFormatter.getMessageOptions();
                 _.merge(messageOptions, getPhoneNumberSelectKeyboard(deals));

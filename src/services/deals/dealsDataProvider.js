@@ -10,7 +10,7 @@ import CachedDeal from './cache/cachedDeal.model';
 const DEALS_EXPIRATION_TIMEOUT = 1000 * 60 * 30; //30 mins
 
 function checkIfCanProvideDeals(userState) {
-    return userState.operation && userState.city && userState.currency;
+    return userState && userState.operation && userState.city && userState.currency;
 }
 
 function checkIfNotExpired(cachedDeal) {
