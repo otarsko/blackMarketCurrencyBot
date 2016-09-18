@@ -1,4 +1,5 @@
-import Help from './commands/help';
+import Help from './commands/general/help';
+import Settings from './commands/general/settings';
 import CitySelector from './commands/citySelector';
 import CurrencySelector from './commands/currencySelector';
 import OperationSelector from './commands/operationSelector';
@@ -24,7 +25,8 @@ export default class HandlerRouter {
       'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler, languageSelector),
       'latest5' : new Latest5Deals(),
       'lang' : languageSelector,
-      'findDeals' : new FindDeals()
+      'findDeals' : new FindDeals(),
+      'settings' : new Settings()
     }
   }
 

@@ -3,12 +3,11 @@
 import log from 'npmlog';
 import _ from 'lodash';
 
-import NotFilledPreferencesException from '../../../lib/exception/NotFilledPreferencesException'
+import NotFilledPreferencesException from '../../../lib/exception/NotFilledPreferencesException';
 import IllegalArgumentsException from '../../../lib/exception/illegalArgumentsException';
-import DealsDataProvider from '../../../services/deals/dealsDataProvider'
-import UserState from '../../../services/userState/userState.model'
-import DealsMessageFormatter from '../../../services/deals/dealsMessageFormatter'
-import DealPhoneNumberProvider from '../../../services/deals/dealPhoneNumberProvider'
+import DealsDataProvider from '../../../services/deals/dealsDataProvider';
+import DealsMessageFormatter from '../../../services/deals/dealsMessageFormatter';
+import DealPhoneNumberProvider from '../../../services/deals/dealPhoneNumberProvider';
 
 const COMMAND_PREFIX = 'findDeals_'; //todo: move to another place?
 
