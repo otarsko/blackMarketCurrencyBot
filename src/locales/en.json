@@ -14,6 +14,7 @@
   "buy": "Buy",
   "sell": "Sell",
   "help_latest5": "Send /latest5 to get 5 latest deals.",
+  "help_findDeals": "Send /findDeals _KEYWORD_ to get deals with given keyword (e.g. /findDeals Салтовка).",
   "help_setup": "Send /setup to set language/city/currency/operation you are interested in.",
   "help_lang": "Send /lang to set/change language.",
   "help_city": "Send /city to set/change city.",
@@ -25,5 +26,7 @@
   "deal_time": "`%s`*Time posted*: %s",
   "deal_rate": "*Rate*: %s",
   "deal_amount": "*Amount*: %s",
-  "deal_message": "*Message*: %s"
+  "deal_message": "*Message*: %s",
+  "no_deals": "Found no deals.",
+  "Keyword can not be less than 3 symbols": "Keyword can not be less than 3 symbols"
 }

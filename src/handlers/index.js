@@ -5,6 +5,7 @@ import OperationSelector from './commands/operationSelector';
 import SetUp from './commands/setUp';
 import Latest5Deals from './commands/deals/latest5Deals.js';
 import LanguageSelector from './commands/languageSelector.js';
+import FindDeals from './commands/deals/findDeals';
 
 const DEFAULT_HANDLER_KEY = 'help';
 export default class HandlerRouter {
@@ -22,12 +23,13 @@ export default class HandlerRouter {
       'operation': operationSelectorHandler,
       'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler, languageSelector),
       'latest5' : new Latest5Deals(),
-      'lang' : languageSelector
+      'lang' : languageSelector,
+      'findDeals' : new FindDeals()
     }
   }
 
   getCommandHandler(message) {
-    var key = message.text;
+    var key = message.command;
     if (key.indexOf('/') == 0) {
       key = key.substr(1);
     }

@@ -1,5 +1,3 @@
-import he from 'he'
-
 const MESSAGE_OPTIONS = {
     parse_mode: 'Markdown'
 };
@@ -18,9 +16,9 @@ export default class DealsMessageFormatter {
         var text = '';
         deals.forEach((elem, index) => {
             var dealMessage = message.__('deal_time', index + 1, elem.time) + '\n'
-                + message.__('deal_rate', he.decode(elem.rate)) + '\n'
-                + message.__('deal_amount', he.decode(elem.ammount)) + '\n'
-                + message.__('deal_message', he.decode(elem.message)) + '\n\n';
+                + message.__('deal_rate', elem.rate) + '\n'
+                + message.__('deal_amount', elem.ammount) + '\n'
+                + message.__('deal_message', elem.message) + '\n\n';
 
             if (dealMessage.length > maxCharsPerMessage) {
                 dealMessage = dealMessage.substring(0, maxCharsPerMessage - 5) + '...\n\n';

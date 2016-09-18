@@ -5,6 +5,7 @@ import MinfinUrlBuilder from './minfin/parsing/minfinUrlBuilder';
 import MinfinParser from './minfin/parsing/minfinParser';
 import UserState from '../userState/userState.model';
 import NotFilledPreferencesException from '../../lib/exception/NotFilledPreferencesException';
+import IllegalArgumentsException from '../../lib/exception/illegalArgumentsException';
 import CachedDeal from './cache/cachedDeal.model';
 
 const DEALS_EXPIRATION_TIMEOUT = 1000 * 60 * 30; //30 mins
@@ -19,37 +20,37 @@ function checkIfNotExpired(cachedDeal) {
     var now = new Date();
     var timeDiff = Math.abs(modelUpdateTime - now.getTime());
 
-    log.verbose('', 'Cached deal update time %s and now is %s. Time diff for deal is %s', modelUpdateTime.toString(), now.toString(), timeDiff);
+    log.verbose('DealsDataProvider', 'Cached deal update time %s and now is %s. Time diff for deal is %s', modelUpdateTime.toString(), now.toString(), timeDiff);
     return timeDiff <= DEALS_EXPIRATION_TIMEOUT;
 }
 
 function getDeals(urlBuilder, parser, userState) {
     var url = urlBuilder.getUrl(userState);
-    log.verbose('', 'Got url %s for user state %j', url, userState);
+    log.verbose('DealsDataProvider', 'Got url %s for user state %j', url, userState);
 
     if (url) {
         return CachedDeal.findOne({'url' : url}).exec()
             .then((cachedDeal) => {
 
-                log.verbose('', 'Got cached deal %j for url %s', cachedDeal, url);
+                log.verbose('DealsDataProvider', 'Got cached deal %j for url %s', cachedDeal, url);
                 if (cachedDeal && checkIfNotExpired(cachedDeal)) {
 
-                    log.verbose('', 'Will return cached deal');
+                    log.verbose('DealsDataProvider', 'Will return cached deal');
                     return cachedDeal.deals;
                 } else {
 
-                    log.verbose('', 'Got no cached deal to be returned');
+                    log.verbose('DealsDataProvider', 'Got no cached deal to be returned');
                     return cacheAndGetDeals(parser, url, cachedDeal);
                 }
             });
     } else {
-        log.verbose('', 'Got NO url for user state %j', userState);
+        log.verbose('DealsDataProvider', 'Got NO url for user state %j', userState);
         return Promise.reject(new Error('Url was not build. Will not provide deals'));
     }
 }
 
 function cacheAndGetDeals(parser, url, cachedDeal) {
-    log.verbose('', 'Will get deals and cache them for url %s', url);
+    log.verbose('DealsDataProvider', 'Will get deals and cache them for url %s', url);
 
     var removeCachedPromise;
     if (cachedDeal) {
@@ -68,9 +69,9 @@ function cacheAndGetDeals(parser, url, cachedDeal) {
         .then(() => parser.getDeals(url))
         .then(deals => {
            if (deals) {
-               log.verbose('', 'Got %s deals for url %s. Will cache them and return result', deals.length, url);
+               log.verbose('DealsDataProvider', 'Got %s deals for url %s. Will cache them and return result', deals.length, url);
 
-               log.verbose('', 'Will create new instance of cached deals');
+               log.verbose('DealsDataProvider', 'Will create new instance of cached deals');
                cachedDeal = new CachedDeal({
                    'url': url,
                    'deals': deals
@@ -84,6 +85,18 @@ function cacheAndGetDeals(parser, url, cachedDeal) {
         });
 }
 
+function findDeals(userId, searchTerm, urlBuilder) {
+    return UserState.findOne({'userId': userId}).exec()
+        .then((userState) => {
+            return urlBuilder.getUrl(userState);
+        })
+        .then(url => {
+            return CachedDeal.findOne({'url' : url}).exec()
+                .then((cachedDeal) => {
+
+                });
+        });
+}
 
 //todo: too many code there, should split
 //todo: to many nested promises
@@ -95,24 +108,24 @@ export default class DealsDataProvider {
     }
 
     getDeals(userId) {
-        log.verbose('', 'Getting deals for user %s', userId);
+        log.verbose('DealsDataProvider', 'Getting deals for user %s', userId);
 
         return UserState.findOne({'userId': userId}).exec()
             .then((userState) => {
-                log.verbose('', 'Found user state %j', userState);
+                log.verbose('DealsDataProvider', 'Found user state %j', userState);
 
                 if (checkIfCanProvideDeals(userState)) {
-                    log.verbose('', 'Can provide deals for user %s', userId);
+                    log.verbose('DealsDataProvider', 'Can provide deals for user %s', userId);
                     return getDeals(this.urlBuilder, this.parser, userState);
                 } else {
-                    log.verbose('', 'Can NOT provide deals for user %s', userId);
+                    log.verbose('DealsDataProvider', 'Can NOT provide deals for user %s', userId);
                     return Promise.reject(new NotFilledPreferencesException('Can not provide deals. Missing preferences for user: ' + userId));
                 }
             });
     }
 
     getLast5Deals(userId) {
-        log.verbose('', 'Getting last 5 deals for user %s', userId);
+        log.verbose('DealsDataProvider', 'Getting last 5 deals for user %s', userId);
         return this.getDeals(userId)
             .then(deals => {
                 if (deals && deals.length > 5) {
@@ -121,5 +134,25 @@ export default class DealsDataProvider {
                     return deals;
                 }
             });
+    }
+
+    //todo: can not use mongodb full text search, because deals are stored as subdocument =/
+    findDeals(userId, searchTerm) {
+        log.verbose('DealsDataProvider', `Searching for deals for user ${userId} with keyword '${searchTerm}'`);
+        if (!searchTerm || searchTerm.length < 3) {
+            log.verbose('DealsDataProvider', `Keyword is empty or too short. Rejected.`);
+            return Promise.reject(new IllegalArgumentsException('Keyword can not be less than 3 symbols'));
+        }
+
+        return this.getDeals(userId) //todo: rewrite. Currently call it to refresh cache if needed, but it is too ugly
+            .then(deals => {
+                if (deals.length > 0) {
+                    return deals.filter(deal => {
+                        return deal.message.match(new RegExp(`.*${searchTerm}.*`, 'i'));
+                    });
+                } else {
+                    return deals;
+                }
+            })
     }
 }

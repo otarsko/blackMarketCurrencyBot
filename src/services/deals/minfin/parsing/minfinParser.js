@@ -7,6 +7,7 @@ import agents from 'fake-user-agent';
 import Promise from 'bluebird';
 import RequestPromise from 'request-promise';
 import log from 'npmlog';
+import he from 'he'
 
 import Deal from '../deal.model'; //todo: do I need this model at all?
 
@@ -45,7 +46,7 @@ export default class MinfinParser {
                     var hiddenNumber = $(elem).find(".au-dealer-phone").html();
                     hiddenNumber = condenseWhitespace(removeNewline(stripTags(hiddenNumber)));
 
-                    deals.push(new Deal(bidId, rate, time, sum, message, hiddenNumber));
+                    deals.push(new Deal(bidId, he.decode(rate), time, he.decode(sum), he.decode(message), hiddenNumber));
                 }
             });
             if (deals.length === 0) {
