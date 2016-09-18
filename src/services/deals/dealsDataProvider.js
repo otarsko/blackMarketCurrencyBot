@@ -8,7 +8,7 @@ import NotFilledPreferencesException from '../../lib/exception/NotFilledPreferen
 import IllegalArgumentsException from '../../lib/exception/illegalArgumentsException';
 import CachedDeal from './cache/cachedDeal.model';
 
-const DEALS_EXPIRATION_TIMEOUT = 1000 * 60 * 30; //30 mins
+const DEALS_EXPIRATION_TIMEOUT = 1000 * 60 * 15; //30 mins
 
 function checkIfCanProvideDeals(userState) {
     return userState && userState.operation && userState.city && userState.currency;

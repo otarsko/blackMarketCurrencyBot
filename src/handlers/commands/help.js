@@ -4,7 +4,8 @@ export default class HelpHandler {
 
     handle(message, bot) {
         return bot.sendMessage(message.from,
-            message.__('help_latest5') + '\n'
+            message.__('about_bot') + '\n'
+            + message.__('help_latest5') + '\n'
             + message.__('help_findDeals') + '\n'
             + message.__('help_setup') + '\n'
             + message.__('help_lang') + '\n'

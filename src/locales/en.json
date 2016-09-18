@@ -28,5 +28,6 @@
   "deal_amount": "*Amount*: %s",
   "deal_message": "*Message*: %s",
   "no_deals": "Found no deals.",
-  "Keyword can not be less than 3 symbols": "Keyword can not be less than 3 symbols"
+  "Keyword can not be less than 3 symbols": "Keyword can not be less than 3 symbols.",
+  "about_bot": "This bot provides information from currency black market in Ukraine. All info is taken from http://minfin.com.ua/currency/auction and is updated every 15 minutes."
 }
