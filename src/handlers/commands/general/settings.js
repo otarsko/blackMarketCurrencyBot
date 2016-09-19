@@ -17,7 +17,6 @@ export default class SettingsHandler {
                 } else {
                     messageText += '\n' + message.__('no_settings');
                 }
-                console.log(messageText);
                 return bot.sendMessage(message.from, messageText, {parse_mode: 'Markdown'});
             });
     }
