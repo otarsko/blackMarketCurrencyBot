@@ -1,5 +1,8 @@
+"use strict";
+
 import Help from './commands/general/help';
 import Settings from './commands/general/settings';
+import Start from './commands/general/start';
 import CitySelector from './commands/citySelector';
 import CurrencySelector from './commands/currencySelector';
 import OperationSelector from './commands/operationSelector';
@@ -26,7 +29,8 @@ export default class HandlerRouter {
       'latest5' : new Latest5Deals(),
       'lang' : languageSelector,
       'findDeals' : new FindDeals(),
-      'settings' : new Settings()
+      'settings' : new Settings(),
+      'start' : new Start()
     }
   }
 

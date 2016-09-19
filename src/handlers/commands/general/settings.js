@@ -10,10 +10,10 @@ export default class SettingsHandler {
             .then(userState => {
                 if (userState) {
                     messageText += '\n' + message.__('user_settings',
-                        message.__(userState.language),
-                        message.__(userState.city),
-                        message.__(userState.currency),
-                        message.__(userState.operation))
+                        userState.language ? message.__(userState.language) : '-',
+                        userState.city ? message.__(userState.city) : '-',
+                        userState.currency ? message.__(userState.currency) : '-',
+                        userState.operation ? message.__(userState.operation) : '-');
                 } else {
                     messageText += '\n' + message.__('no_settings');
                 }
