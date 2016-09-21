@@ -11,6 +11,7 @@
 	"operation_changed": "Operation has been set successfully.",
 	"kharkiv": "Kharkiv",
 	"kyiv": "Kyiv",
+	"lviv": "Lviv",
 	"buy": "Buy",
 	"sell": "Sell",
 	"help_latest5": "Send /latest5 to get 5 latest deals.",

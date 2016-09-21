@@ -29,10 +29,18 @@ export default class Messenger {
   handleText(msg) {
     return this.i18n.init(Message.mapMessage(msg)).
         then(message => handlerRouter.getCommandHandler(message).handle(message, this.bot))
+        .catch((err) => {
+          log.error('Messenger', err);
+          this.bot.sendMessage(message.from, message.__('bot_error'));
+        });
   }
 
   handleCallbackQuery(msg) {
     return this.i18n.init(CallbackQueryMessage.mapMessage(msg)).
         then(message => handlerRouter.getCallbackQueryHandler(message).handleCallbackQuery(message, this.bot))
+        .catch((err) => {
+          log.error('Messenger', err);
+          this.bot.sendMessage(message.from, message.__('bot_error'));
+        });
   }
 }

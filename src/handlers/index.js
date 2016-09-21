@@ -1,5 +1,7 @@
 "use strict";
 
+import log from 'npmlog';
+
 import Help from './commands/general/help';
 import Settings from './commands/general/settings';
 import Start from './commands/general/start';

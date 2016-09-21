@@ -10,7 +10,8 @@ function getCitiesKeyboardOptions(message, callbackDataPrefix) { //todo: get fro
             inline_keyboard: [
                 [
                     { text: message.__('kharkiv'), callback_data: callbackDataPrefix + 'kharkiv' },
-                    { text: message.__('kyiv'), callback_data: callbackDataPrefix + 'kyiv' }
+                    { text: message.__('kyiv'), callback_data: callbackDataPrefix + 'kyiv' },
+                    { text: message.__('lviv'), callback_data: callbackDataPrefix + 'lviv' }
                 ]
             ]
         })
