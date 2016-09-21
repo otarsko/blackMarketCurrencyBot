@@ -1,9 +1,17 @@
-import Help from './commands/help';
+"use strict";
+
+import log from 'npmlog';
+
+import Help from './commands/general/help';
+import Settings from './commands/general/settings';
+import Start from './commands/general/start';
 import CitySelector from './commands/citySelector';
 import CurrencySelector from './commands/currencySelector';
 import OperationSelector from './commands/operationSelector';
 import SetUp from './commands/setUp';
 import Latest5Deals from './commands/deals/latest5Deals.js';
+import LanguageSelector from './commands/languageSelector.js';
+import FindDeals from './commands/deals/findDeals';
 
 const DEFAULT_HANDLER_KEY = 'help';
 export default class HandlerRouter {
@@ -12,19 +20,24 @@ export default class HandlerRouter {
     var citySelectorHandler = new CitySelector();
     var currencySelectorHandler = new CurrencySelector();
     var operationSelectorHandler = new OperationSelector();
+    var languageSelector = new LanguageSelector();
 
-    this.handlers = {
+      this.handlers = {
       'help': new Help(),
       'city': citySelectorHandler,
       'currency': currencySelectorHandler,
       'operation': operationSelectorHandler,
-      'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler),
-      'latest5' : new Latest5Deals()
+      'setup': new SetUp(citySelectorHandler, currencySelectorHandler, operationSelectorHandler, languageSelector),
+      'latest5' : new Latest5Deals(),
+      'lang' : languageSelector,
+      'findDeals' : new FindDeals(),
+      'settings' : new Settings(),
+      'start' : new Start()
     }
   }
 
   getCommandHandler(message) {
-    var key = message.text;
+    var key = message.command;
     if (key.indexOf('/') == 0) {
       key = key.substr(1);
     }

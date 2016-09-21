@@ -1,5 +1,3 @@
-import he from 'he'
-
 const MESSAGE_OPTIONS = {
     parse_mode: 'Markdown'
 };
@@ -8,23 +6,26 @@ const MAX_CHARS_IN_MESSAGE = 4000; //todo: this value is specific to bot platfor
 
 export default class DealsMessageFormatter {
 
-    formatDeals(deals) {
+    formatDeals(message, deals) {
         if (!deals || deals.length < 1) {
             return 'No deals found.';
         }
 
-        var phoneNumberRequestMessage = '\nTo get phone number please use keyboard bellow.';
+        var phoneNumberRequestMessage = '\n' + message.__('phone_number_request');
         var maxCharsPerMessage = (MAX_CHARS_IN_MESSAGE - phoneNumberRequestMessage.length) / deals.length;
-        var message = '';
+        var text = '';
         deals.forEach((elem, index) => {
-            var dealMessage = `\`${index + 1}\`*Time posted*: ${elem.time}\n*Rate*: ${he.decode(elem.rate)}\n`
-                + `*Amount*: ${he.decode(elem.ammount)}\n*Message*: ${he.decode(elem.message)}\n\n`;
+            var dealMessage = message.__('deal_time', index + 1, elem.time) + '\n'
+                + message.__('deal_rate', elem.rate) + '\n'
+                + message.__('deal_amount', elem.ammount) + '\n'
+                + message.__('deal_message', elem.message) + '\n\n';
+
             if (dealMessage.length > maxCharsPerMessage) {
                 dealMessage = dealMessage.substring(0, maxCharsPerMessage - 5) + '...\n\n';
             }
-            message += dealMessage;
+            text += dealMessage;
         });
-        return message + phoneNumberRequestMessage;
+        return text + phoneNumberRequestMessage;
     }
 
     //todo: return together with formatted deals?

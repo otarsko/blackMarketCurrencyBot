@@ -3,22 +3,23 @@
 import log from 'npmlog';
 import _ from 'lodash';
 
-import NotFilledPreferencesException from '../../../lib/exception/NotFilledPreferencesException'
-import DealsDataProvider from '../../../services/deals/dealsDataProvider'
-import UserState from '../../../services/userState/userState.model'
-import DealsMessageFormatter from '../../../services/deals/dealsMessageFormatter'
-import DealPhoneNumberProvider from '../../../services/deals/dealPhoneNumberProvider'
+import NotFilledPreferencesException from '../../../lib/exception/NotFilledPreferencesException';
+import IllegalArgumentsException from '../../../lib/exception/illegalArgumentsException';
+import DealsDataProvider from '../../../services/deals/dealsDataProvider';
+import DealsMessageFormatter from '../../../services/deals/dealsMessageFormatter';
+import DealPhoneNumberProvider from '../../../services/deals/dealPhoneNumberProvider';
 
-const COMMAND_PREFIX = 'latest5_'; //todo: move to another place?
+const COMMAND_PREFIX = 'findDeals_'; //todo: move to another place?
 
+//todo: remove copy-paste stuff
 function getPhoneNumberSelectKeyboard(deals) {
 
     var buttons = [];
     deals.forEach((deal, index) => {
         buttons.push({
-           text: '' + (index + 1),
-           callback_data: `${COMMAND_PREFIX}${deal.bidId}`
-       })
+            text: '' + (index + 1),
+            callback_data: `${COMMAND_PREFIX}${deal.bidId}`
+        })
     });
     return {
         reply_markup: JSON.stringify({
@@ -27,7 +28,7 @@ function getPhoneNumberSelectKeyboard(deals) {
     };
 }
 
-export default class Latest5DealsHandler {
+export default class FindDeals {
 
     constructor() {
         this.dealsProvider = new DealsDataProvider();
@@ -36,18 +37,25 @@ export default class Latest5DealsHandler {
     }
 
     handle(message, bot) {
-        return this.dealsProvider.getLast5Deals(message.from)
+        return this.dealsProvider.findDeals(message.from, message.options)
             .then((deals) => {
-                var messageOptions = this.messageFormatter.getMessageOptions();
-                _.merge(messageOptions, getPhoneNumberSelectKeyboard(deals));
+                if (deals.length > 0) {
+                    var messageOptions = this.messageFormatter.getMessageOptions();
+                    _.merge(messageOptions, getPhoneNumberSelectKeyboard(deals));
 
-                return bot.sendMessage(message.from,
-                    this.messageFormatter.formatDeals(message, deals), messageOptions);
+                    return bot.sendMessage(message.from,
+                        this.messageFormatter.formatDeals(message, deals), messageOptions);
+                } else {
+                    return bot.sendMessage(message.from, message.__('no_deals'));
+                }
             })
             .catch((error) => {
                 if (error instanceof NotFilledPreferencesException) {
                     log.verbose('Latest5DealsHandler', 'Got error %j', error);
                     bot.sendMessage(message.from, message.__('error_setup_account'));
+                } else if (error instanceof IllegalArgumentsException) {
+                    log.verbose('Latest5DealsHandler', 'Got error %j', error);
+                    bot.sendMessage(message.from, message.__(error.getMessage()));
                 } else {
                     log.error('Latest5DealsHandler', 'Got error %j', error);
                     bot.sendMessage(message.from, message.__('bot_error'));
@@ -61,8 +69,9 @@ export default class Latest5DealsHandler {
      * @param message
      * @param bot
      */
+    //todo: copy-pasted
     handleCallbackQuery(message, bot) {
-        log.verbose('Latest5DealsHandler', `Handling callback query with data ${message.data}`);
+        log.verbose('KeywordDeals', `Handling callback query with data ${message.data}`);
         var dealId = message.data.split('_')[1];
 
         this.phoneNumberProvider.getPhoneNumber(dealId)

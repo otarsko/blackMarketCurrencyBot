@@ -9,8 +9,10 @@ function getCurrenciesKeyboardOptions(callbackDataPrefix) { //todo: get from mon
     return {
         reply_markup: JSON.stringify({
             inline_keyboard: [
-                [{ text: 'USD', callback_data: callbackDataPrefix + 'usd' }],
-                [{ text: 'EUR', callback_data: callbackDataPrefix + 'eur' }]
+                [
+                    { text: 'USD', callback_data: callbackDataPrefix + 'usd' },
+                    { text: 'EUR', callback_data: callbackDataPrefix + 'eur' }
+                ]
             ]
         })
     };
@@ -21,7 +23,7 @@ export default class CurrencyHandler {
     handle(message, bot, callbackDataPrefix) {
         var parentHandlerPrefix = callbackDataPrefix || '';
         return bot.sendMessage(message.from,
-            'Please select the currency you are interested in.',
+            message.__('select_currency'),
             getCurrenciesKeyboardOptions(parentHandlerPrefix + COMMAND_PREFIX));
     }
 
@@ -35,12 +37,12 @@ export default class CurrencyHandler {
                 return userState.save();
             })
             .then(() => {
-                return bot.sendMessage(message.from, 'Currency has been set successfully.')
+                return bot.sendMessage(message.from, message.__('currency_changed'))
             })
             .catch((err) => {
                 console.error(err);
                 if (!triggeredExternally) {
-                    bot.sendMessage(message.from, 'Sorry, something went wrong. Try a bit later.'); //todo: copy-paste
+                    bot.sendMessage(message.from, message.__('bot_error')); //todo: copy-paste
                 }
                 return new CommandException(err.message);
             });

@@ -11,6 +11,7 @@ export default {
     },
     cityPath: { //todo: get from MongoDB
         'kharkiv': '/kharkov',
-        'kyiv': '/kiev'
+        'kyiv': '/kiev',
+        'lviv': '/lvov'
     }
 }

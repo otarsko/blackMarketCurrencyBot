@@ -1,14 +1,24 @@
 export default class Message {
 
-  constructor(userId, text) {
-    this.from = userId;
-    this.text = text;
-  }
-
   static mapMessage(msg) {
+
+    var command,
+        options;
+
+    if (msg.text.indexOf(' ') > -1) {
+      var splitted = msg.text.split(' ');
+      command = splitted[0];
+      options = splitted.slice(1).join(' '); //to get options with spaces
+
+      //todo: use some lib for options extraction?
+    } else {
+      command = msg.text;
+    }
+
     return {
       from: msg.from.id,
-      text: msg.text
+      command: command,
+      options: options
     }
   }
 }
